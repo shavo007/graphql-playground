@@ -1,0 +1,24 @@
+{
+  "extends": ["airbnb-base", "prettier"],
+  "rules": {
+    "no-console": "off",
+    "no-param-reassign": ["error", { "props": false }]
+  },
+  "globals": {
+    "afterAll": true,
+    "beforeAll": true,
+    "before": true,
+    "after": true,
+    "beforeEach": true,
+    "afterEach": true,
+    "describe": true,
+    "fit": true,
+    "it": true,
+    "jasmine": true,
+    "chai": true,
+    "expect": true,
+    "xit": true,
+    "jest": true,
+    "mocha": true
+  }
+}
