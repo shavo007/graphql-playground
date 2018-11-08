@@ -20,6 +20,7 @@ const schema = gql`
     addBook(title: String, author: String): Book
     createMessage(text: String!): Message!
     deleteMessage(id: ID!): Boolean!
+    updateMessage(id: ID!, text: String!): Boolean!
   }
 
   type User {
@@ -133,6 +134,14 @@ const resolvers = {
       messages = otherMessages;
 
       return true;
+    },
+    updateMessage(parent, { id, text }) {
+      if (messages[id]) {
+        messages[id].text = text;
+        return true;
+      } 
+        return false;
+      
     }
   },
   // resolve per field level
