@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import { ApolloServer, gql } from 'apollo-server-express';
+import uuidv4 from 'uuid/v4';
 
 const app = express();
 app.use(cors());
@@ -17,6 +18,8 @@ const schema = gql`
 
   type Mutation {
     addBook(title: String, author: String): Book
+    createMessage(text: String!): Message!
+    deleteMessage(id: ID!): Boolean!
   }
 
   type User {
@@ -66,7 +69,7 @@ const users = {
   }
 };
 
-const messages = {
+let messages = {
   1: {
     id: '1',
     text: 'Hello World',
@@ -79,16 +82,22 @@ const messages = {
   }
 };
 
+const getUser = token => {
+  const user = users[1];
+  return user;
+};
+
 // const me = users[1];
 //
-// TODO to combine resolver maps check out https://www.apollographql.com/docs/graphql-tools/generate-schema.html#modularizing
-
+// NOTE to combine resolver maps check out https://www.apollographql.com/docs/graphql-tools/generate-schema.html#modularizing
+// NOTE  extract resolvers into their own files/connectors https://www.apollographql.com/docs/graphql-tools/connectors.html#connectors
 const resolvers = {
   Query: {
     // (parent, args, context, info) => { ... }
     me: (parent, args, { me }) => me,
-    user: (parent, { id }) => {
+    user: (parent, { id }, { user }) => {
       console.log(`parent ${parent}`);
+      console.log(`user ${JSON.stringify(user)}`);
       // console.log(`args ${JSON.stringify(args)}`);
       return users[id];
     },
@@ -102,13 +111,36 @@ const resolvers = {
     messages: () => Object.values(messages),
     message: (parent, { id }) => messages[id]
   },
+  Mutation: {
+    createMessage(parent, { text }, { me }) {
+      const id = uuidv4();
+      const message = {
+        id,
+        text,
+        userId: me.id
+      };
+      messages[id] = message;
+      users[me.id].messageIds.push(id);
+      return message;
+    },
+    deleteMessage(parent, { id }) {
+      const { [id]: message, ...otherMessages } = messages;
+
+      if (!message) {
+        return false;
+      }
+
+      messages = otherMessages;
+
+      return true;
+    }
+  },
   // resolve per field level
   //  flexibility to add your own data mapping
   User: {
     // username: parent => `${parent.firstname} ${parent.lastname}`
-    messages: parent => Object.values(messages).filter(
-        message => message.userId === parent.id
-      )
+    messages: parent =>
+      Object.values(messages).filter(message => message.userId === parent.id)
   },
   Message: {
     user: parent => users[parent.userId]
@@ -121,8 +153,20 @@ const server = new ApolloServer({
   // context: ({ req }) => ({
   //    authScope: getScope(req.headers.authorization)
   //  })
-  context: {
-    me: users[1]
+  context: ({ req }) => {
+    // TODO showcase auth
+    // get the user token from the headers
+    const token = req.headers.authorization || '';
+    // try to retrieve a user with the token
+    //
+    const user = getUser(token);
+    // optionally block the user
+    // we could also check user roles/permissions here
+    // if (!user) throw new AuthorizationError('you must be logged in');
+    return {
+      me: users[1],
+      user
+    };
   }
 });
 
