@@ -1,8 +1,8 @@
 export default {
   Query: {
-    users: (parent, args, { models }) => Object.values(models.users),
-    user: (parent, { id }, { models }) => models.users[id],
-    me: (parent, args, { me }) => me
+    users: async (parent, args, { models }) => models.User.findAll(),
+    user: (parent, { id }, { models }) => models.User.findById(id),
+    me: (parent, args, { models, me }) => models.User.findById(me.id)
   },
 
   // resolve per field level
@@ -10,9 +10,11 @@ export default {
 
   User: {
     // username: parent => `${parent.firstname} ${parent.lastname}`
-    messages: (parent, args, { models }) =>
-      Object.values(models.messages).filter(
-        message => message.userId === parent.id
-      )
+    messages: async (parent, args, { models }) =>
+      models.Message.findAll({
+        where: {
+          userId: parent.id
+        }
+      })
   }
 };

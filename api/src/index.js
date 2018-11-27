@@ -3,7 +3,8 @@ import cors from 'cors';
 import { ApolloServer } from 'apollo-server-express';
 import schema from './schema';
 import resolvers from './resolvers';
-import models from './models';
+// import models from './models';
+import models, { sequelize } from './models';
 
 const app = express();
 app.use(cors());
@@ -11,6 +12,39 @@ app.use(cors());
 const getUser = token => {
   const user = models.users[1];
   return user;
+};
+
+const createUsersWithMessages = async () => {
+  await models.User.create(
+    {
+      username: 'rwieruch',
+      messages: [
+        {
+          text: 'Published the Road to learn React'
+        }
+      ]
+    },
+    {
+      include: [models.Message]
+    }
+  );
+
+  await models.User.create(
+    {
+      username: 'ddavids',
+      messages: [
+        {
+          text: 'Happy to release ...'
+        },
+        {
+          text: 'Published a complete ...'
+        }
+      ]
+    },
+    {
+      include: [models.Message]
+    }
+  );
 };
 
 // const me = users[1];
@@ -21,7 +55,7 @@ const server = new ApolloServer({
   // context: ({ req }) => ({
   //    authScope: getScope(req.headers.authorization)
   //  })
-  context: ({ req }) => {
+  context: async ({ req }) => {
     // TODO showcase auth
     // get the user token from the headers
     const token = req.headers.authorization || '';
@@ -32,15 +66,24 @@ const server = new ApolloServer({
     // we could also check user roles/permissions here
     // if (!user) throw new AuthorizationError('you must be logged in');
     return {
-      me: models.users[1],
+      me: await models.User.findByLogin('rwieruch'),
+      // me: models.users[1],
       user,
       models
     };
   }
 });
 
-server.applyMiddleware({ app, path: '/graphql' });
+const eraseDatabaseOnSync = true;
 
-app.listen({ port: 8000 }, () => {
-  console.log('Apollo Server on http://localhost:8000/graphql');
+sequelize.sync({ force: eraseDatabaseOnSync }).then(async () => {
+  if (eraseDatabaseOnSync) {
+    createUsersWithMessages();
+  }
+
+  server.applyMiddleware({ app, path: '/graphql' });
+
+  app.listen({ port: 8000 }, () => {
+    console.log('Apollo Server on http://localhost:8000/graphql 😛');
+  });
 });

@@ -1,36 +1,62 @@
-const users = {
-  1: {
-    id: '1',
-    username: 'Robin Wieruch',
-    firstname: 'Robin',
-    lastname: 'Wieruch',
-    moody: true,
-    messageIds: [1]
-  },
-  2: {
-    id: '2',
-    username: 'Dave Davids',
-    firstname: 'Dave',
-    lastname: 'Davids',
-    moody: false,
-    messageIds: [2]
+import Sequelize from 'sequelize';
+
+const sequelize = new Sequelize(
+  process.env.DATABASE,
+  process.env.DATABASE_USER,
+  process.env.DATABASE_PASSWORD,
+  {
+    dialect: 'postgres'
   }
+);
+
+const models = {
+  User: sequelize.import('./user'),
+  Message: sequelize.import('./message')
 };
 
-const messages = {
-  1: {
-    id: '1',
-    text: 'Hello World',
-    userId: '1'
-  },
-  2: {
-    id: '2',
-    text: 'By World',
-    userId: '2'
+Object.keys(models).forEach(key => {
+  if ('associate' in models[key]) {
+    models[key].associate(models);
   }
-};
+});
 
-export default {
-  users,
-  messages
-};
+export { sequelize };
+
+export default models;
+
+// const users = {
+//   1: {
+//     id: '1',
+//     username: 'Robin Wieruch',
+//     firstname: 'Robin',
+//     lastname: 'Wieruch',
+//     moody: true,
+//     messageIds: [1]
+//   },
+//   2: {
+//     id: '2',
+//     username: 'Dave Davids',
+//     firstname: 'Dave',
+//     lastname: 'Davids',
+//     moody: false,
+//     messageIds: [2]
+//   }
+// };
+//
+// const messages = {
+//   1: {
+//     id: '1',
+//     text: 'Hello World',
+//     userId: '1'
+//   },
+//   2: {
+//     id: '2',
+//     text: 'By World',
+//     userId: '2'
+//   }
+// };
+//
+// export default {
+//   users,
+//   messages
+// };
