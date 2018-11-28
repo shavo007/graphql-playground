@@ -1,4 +1,5 @@
 import express from 'express';
+import 'dotenv/config';
 import cors from 'cors';
 import { ApolloServer } from 'apollo-server-express';
 import schema from './schema';
@@ -61,14 +62,14 @@ const server = new ApolloServer({
     const token = req.headers.authorization || '';
     // try to retrieve a user with the token
     //
-    const user = getUser(token);
+    // const user = getUser(token);
     // optionally block the user
     // we could also check user roles/permissions here
     // if (!user) throw new AuthorizationError('you must be logged in');
     return {
       me: await models.User.findByLogin('rwieruch'),
       // me: models.users[1],
-      user,
+      // user,
       models
     };
   }

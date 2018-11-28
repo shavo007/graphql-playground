@@ -1,8 +1,8 @@
 export default {
   Query: {
     users: async (parent, args, { models }) => models.User.findAll(),
-    user: (parent, { id }, { models }) => models.User.findById(id),
-    me: (parent, args, { models, me }) => models.User.findById(me.id)
+    user: (parent, { id }, { models }) => models.User.findByPk(id),
+    me: (parent, args, { models, me }) => models.User.findByPk(me.id)
   },
 
   // resolve per field level
