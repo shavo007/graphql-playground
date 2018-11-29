@@ -20,6 +20,18 @@ Install PgAdmin
 
 https://www.pgadmin.org/download/
 
+![](docs/./docs/pgAdmin4.png)
+
+## Error handling
+
+[Error handling](https://www.apollographql.com/docs/apollo-server/v2/features/errors.html)
+
+**TODO**
+
+To disable stacktraces for production, pass debug: false to the Apollo server constructor or set the NODE_ENV environment variable to ‘production’ or ‘test’. Note that this will make the stacktrace unavailable to your application. If you want to log the stacktrace, but not send it in the response to the client, see Masking and logging errors below.
+
 ## Resources
 
-[GraphQL execution](https://graphql.github.io/learn/execution/)
+- [GraphQL execution](https://graphql.github.io/learn/execution/)
+- [API validation/custom directives](https://blog.apollographql.com/graphql-validation-using-directives-4908fd5c1055) -- similar to jpa annotations!!
+- [Rest datasource](https://www.apollographql.com/docs/apollo-server/v2/features/data-sources.html)

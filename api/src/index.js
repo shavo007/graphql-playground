@@ -53,6 +53,19 @@ const createUsersWithMessages = async () => {
 const server = new ApolloServer({
   typeDefs: schema,
   resolvers,
+  // global error handling
+  formatError: error => {
+    // remove the internal sequelize error message
+    // leave only the important validation error
+    const message = error.message
+      .replace('SequelizeValidationError: ', '')
+      .replace('Validation error: ', '');
+
+    return {
+      ...error,
+      message
+    };
+  },
   // context: ({ req }) => ({
   //    authScope: getScope(req.headers.authorization)
   //  })

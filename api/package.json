@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon --exec babel-node src/index.js",
+    "start:prod": "NODE_ENV=production nodemon --exec babel-node src/index.js",
     "test-server": "TEST_DATABASE=mytestdatabase npm start",
     "test": "mocha --require babel-core/register 'src/**/*.spec.js'",
     "format": "prettier --write \"**/*.js\""

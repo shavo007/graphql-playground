@@ -7,13 +7,18 @@ export default {
   },
 
   Mutation: {
-    createMessage: async (parent, { text }, { me, models }) =>
-      // const id = uuidv4();
+    createMessage: async (parent, { text }, { me, models }) => {
+      try {
+        return await models.Message.create({
+          text,
+          userId: me.id
+        });
+      } catch (error) {
+        console.log(`error is ${error}`);
+        throw new Error(error);
+      }
+    },
 
-      models.Message.create({
-        text,
-        userId: me.id
-      }),
     deleteMessage: async (parent, { id }, { models }) =>
       models.Message.destroy({ where: { id } }),
     updateMessage(parent, { id, text }, { models }) {
