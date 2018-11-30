@@ -20,7 +20,7 @@ Install PgAdmin
 
 https://www.pgadmin.org/download/
 
-![](docs/./docs/pgAdmin4.png)
+![](docs/pgAdmin4.png)
 
 ## Error handling
 
@@ -35,3 +35,4 @@ To disable stacktraces for production, pass debug: false to the Apollo server co
 - [GraphQL execution](https://graphql.github.io/learn/execution/)
 - [API validation/custom directives](https://blog.apollographql.com/graphql-validation-using-directives-4908fd5c1055) -- similar to jpa annotations!!
 - [Rest datasource](https://www.apollographql.com/docs/apollo-server/v2/features/data-sources.html)
+- [Github graphql API](https://developer.github.com/v4/)

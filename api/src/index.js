@@ -19,6 +19,8 @@ const createUsersWithMessages = async () => {
   await models.User.create(
     {
       username: 'rwieruch',
+      email: 'hello@robin.com',
+      password: 'rwieruch',
       messages: [
         {
           text: 'Published the Road to learn React'
@@ -33,6 +35,8 @@ const createUsersWithMessages = async () => {
   await models.User.create(
     {
       username: 'ddavids',
+      email: 'hello@david.com',
+      password: 'ddavids',
       messages: [
         {
           text: 'Happy to release ...'
@@ -83,7 +87,8 @@ const server = new ApolloServer({
       me: await models.User.findByLogin('rwieruch'),
       // me: models.users[1],
       // user,
-      models
+      models,
+      secret: process.env.SECRET
     };
   }
 });
@@ -98,6 +103,6 @@ sequelize.sync({ force: eraseDatabaseOnSync }).then(async () => {
   server.applyMiddleware({ app, path: '/graphql' });
 
   app.listen({ port: 8000 }, () => {
-    console.log('Apollo Server on http://localhost:8000/graphql 😛');
+    console.log('Apollo Server on http://localhost:8000/graphql 😛 🚀 🚀🚀');
   });
 });
