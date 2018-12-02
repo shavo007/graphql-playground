@@ -1,3 +1,12 @@
+## Setup
+
+```bash
+nvm use
+yarn
+cp .env.example .env
+yarn start
+```
+
 ## Postgres setup
 
 `docker run --name some-postgres -e POSTGRES_PASSWORD=mysecretpassword -p 5432:5432 -d postgres`
