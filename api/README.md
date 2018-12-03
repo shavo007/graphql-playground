@@ -22,6 +22,14 @@ https://www.pgadmin.org/download/
 
 ![](docs/pgAdmin4.png)
 
+## Authz
+
+Sample headers
+
+```bash
+{"Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NywiZW1haWwiOiJzbGVlMUBzZWVrLmNvbS5hdSIsInVzZXJuYW1lIjoic2hhbmUxIiwiaWF0IjoxNTQzODA5NjU2LCJleHAiOjE1NDM4MTE0NTZ9.hKV1vR6kV3hCCAMxBtGsuXeZ5MUq1TIwQSGcvk_gb_M"}
+```
+
 ## Error handling
 
 [Error handling](https://www.apollographql.com/docs/apollo-server/v2/features/errors.html)

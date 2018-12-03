@@ -1,4 +1,7 @@
 // import uuidv4 from 'uuid/v4';
+import { combineResolvers } from 'graphql-resolvers';
+
+import { isAuthenticated, isMessageOwner } from './authorization';
 
 export default {
   Query: {
@@ -7,20 +10,26 @@ export default {
   },
 
   Mutation: {
-    createMessage: async (parent, { text }, { me, models }) => {
-      try {
-        return await models.Message.create({
-          text,
-          userId: me.id
-        });
-      } catch (error) {
-        console.log(`error is ${error}`);
-        throw new Error(error);
+    createMessage: combineResolvers(
+      isAuthenticated,
+      async (parent, { text }, { me, models }) => {
+        try {
+          return await models.Message.create({
+            text,
+            userId: me.id
+          });
+        } catch (error) {
+          console.log(`error is ${error}`);
+          throw new Error(error);
+        }
       }
-    },
-
-    deleteMessage: async (parent, { id }, { models }) =>
-      models.Message.destroy({ where: { id } }),
+    ),
+    deleteMessage: combineResolvers(
+      isAuthenticated,
+      isMessageOwner,
+      async (parent, { id }, { models }) =>
+        models.Message.destroy({ where: { id } })
+    ),
     updateMessage(parent, { id, text }, { models }) {
       // TODO update this to sql update query
       if (models.messages[id]) {

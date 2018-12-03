@@ -1,7 +1,8 @@
 import express from 'express';
+import jwt from 'jsonwebtoken';
 import 'dotenv/config';
 import cors from 'cors';
-import { ApolloServer } from 'apollo-server-express';
+import { ApolloServer, AuthenticationError } from 'apollo-server-express';
 import schema from './schema';
 import resolvers from './resolvers';
 // import models from './models';
@@ -15,12 +16,26 @@ const getUser = token => {
   return user;
 };
 
+const getMe = async token => {
+  if (token) {
+    const bearerToken = token.split(' ')[1];
+    console.log(`bearerToken is ${bearerToken}`);
+    try {
+      return await jwt.verify(bearerToken, process.env.SECRET);
+    } catch (e) {
+      throw new AuthenticationError('Your session expired. Sign in again.');
+    }
+  }
+  return undefined;
+};
+
 const createUsersWithMessages = async () => {
   await models.User.create(
     {
       username: 'rwieruch',
       email: 'hello@robin.com',
       password: 'rwieruch',
+      role: 'ADMIN',
       messages: [
         {
           text: 'Published the Road to learn React'
@@ -74,8 +89,6 @@ const server = new ApolloServer({
   //    authScope: getScope(req.headers.authorization)
   //  })
   context: async ({ req }) => {
-    // TODO showcase auth
-    // get the user token from the headers
     const token = req.headers.authorization || '';
     // try to retrieve a user with the token
     //
@@ -84,7 +97,8 @@ const server = new ApolloServer({
     // we could also check user roles/permissions here
     // if (!user) throw new AuthorizationError('you must be logged in');
     return {
-      me: await models.User.findByLogin('rwieruch'),
+      me: await getMe(token),
+      // me: await models.User.findByLogin('rwieruch'),
       // me: models.users[1],
       // user,
       models,
