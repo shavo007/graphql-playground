@@ -5,7 +5,8 @@ import { isAuthenticated, isMessageOwner } from './authorization';
 
 export default {
   Query: {
-    messages: async (parent, args, { models }) => models.Message.findAll(),
+    messages: async (parent, { offset = 0, limit = 100 }, { models }) =>
+      models.Message.findAll({ offset, limit }),
     message: async (parent, { id }, { models }) => models.Message.findByPk(id)
   },
 
