@@ -44,3 +44,5 @@ To disable stacktraces for production, pass debug: false to the Apollo server co
 - [API validation/custom directives](https://blog.apollographql.com/graphql-validation-using-directives-4908fd5c1055) -- similar to jpa annotations!!
 - [Rest datasource](https://www.apollographql.com/docs/apollo-server/v2/features/data-sources.html)
 - [Github graphql API](https://developer.github.com/v4/)
+- [Best practices](https://graphql.github.io/learn/best-practices/)
+- [Sandbox](https://codesandbox.io/s/apollo-server)
