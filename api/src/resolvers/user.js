@@ -1,9 +1,11 @@
 import jwt from 'jsonwebtoken';
+import { combineResolvers } from 'graphql-resolvers';
 import { AuthenticationError, UserInputError } from 'apollo-server';
+import { isAdmin } from './authorization';
 
 const createToken = async (user, secret, expiresIn) => {
-  const { id, email, username } = user;
-  return jwt.sign({ id, email, username }, secret, { expiresIn });
+  const { id, email, username, role } = user;
+  return jwt.sign({ id, email, username, role }, secret, { expiresIn });
 };
 export default {
   Query: {
@@ -44,7 +46,12 @@ export default {
       }
 
       return { token: createToken(user, secret, '30m') };
-    }
+    },
+    deleteUser: combineResolvers(isAdmin, async (parent, { id }, { models }) =>
+      models.User.destroy({
+        where: { id }
+      })
+    )
   },
   // resolve per field level
   //  flexibility to add your own data mapping

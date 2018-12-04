@@ -1,7 +1,9 @@
 import express from 'express';
+import jwt from 'jsonwebtoken';
 import 'dotenv/config';
 import cors from 'cors';
-import { ApolloServer } from 'apollo-server-express';
+import { ApolloServer, AuthenticationError } from 'apollo-server-express';
+import http from 'http';
 import schema from './schema';
 import resolvers from './resolvers';
 // import models from './models';
@@ -15,15 +17,30 @@ const getUser = token => {
   return user;
 };
 
-const createUsersWithMessages = async () => {
+const getMe = async token => {
+  if (token) {
+    const bearerToken = token.split(' ')[1];
+    console.log(`bearerToken is ${bearerToken}`);
+    try {
+      return await jwt.verify(bearerToken, process.env.SECRET);
+    } catch (e) {
+      throw new AuthenticationError('Your session expired. Sign in again.');
+    }
+  }
+  return undefined;
+};
+
+const createUsersWithMessages = async date => {
   await models.User.create(
     {
       username: 'rwieruch',
       email: 'hello@robin.com',
       password: 'rwieruch',
+      role: 'ADMIN',
       messages: [
         {
-          text: 'Published the Road to learn React'
+          text: 'Published the Road to learn React',
+          createdAt: date.setSeconds(date.getSeconds(+1))
         }
       ]
     },
@@ -39,10 +56,12 @@ const createUsersWithMessages = async () => {
       password: 'ddavids',
       messages: [
         {
-          text: 'Happy to release ...'
+          text: 'Happy to release ...',
+          createdAt: date.setSeconds(date.getSeconds(+1))
         },
         {
-          text: 'Published a complete ...'
+          text: 'Published a complete ...',
+          createdAt: date.setSeconds(date.getSeconds(+5))
         }
       ]
     },
@@ -70,26 +89,45 @@ const server = new ApolloServer({
       message
     };
   },
+  subscriptions: {
+    onConnect: (connectionParams, webSocket, context) => {
+      // TODO auth over websocket https://www.apollographql.com/docs/apollo-server/v2/features/subscriptions.html#Authentication-Over-WebSocket
+      console.log(`onConnect: `);
+    },
+    onDisconnect: (webSocket, context) => {
+      // ...
+    }
+  },
+  tracing: true,
+  cacheControl: true,
+  introspection: process.env.NODE_ENV !== 'production',
+  playground: process.env.NODE_ENV !== 'production',
   // context: ({ req }) => ({
   //    authScope: getScope(req.headers.authorization)
   //  })
-  context: async ({ req }) => {
-    // TODO showcase auth
-    // get the user token from the headers
-    const token = req.headers.authorization || '';
-    // try to retrieve a user with the token
-    //
-    // const user = getUser(token);
-    // optionally block the user
-    // we could also check user roles/permissions here
-    // if (!user) throw new AuthorizationError('you must be logged in');
-    return {
-      me: await models.User.findByLogin('rwieruch'),
-      // me: models.users[1],
-      // user,
-      models,
-      secret: process.env.SECRET
-    };
+  context: async ({ req, connection }) => {
+    if (connection) {
+      return {
+        models
+      };
+    }
+    if (req) {
+      const token = req.headers.authorization || '';
+      // try to retrieve a user with the token
+      //
+      // const user = getUser(token);
+      // optionally block the user
+      // we could also check user roles/permissions here
+      // if (!user) throw new AuthorizationError('you must be logged in');
+      return {
+        me: await getMe(token),
+        // me: await models.User.findByLogin('rwieruch'),
+        // me: models.users[1],
+        // user,
+        models,
+        secret: process.env.SECRET
+      };
+    }
   }
 });
 
@@ -97,12 +135,18 @@ const eraseDatabaseOnSync = true;
 
 sequelize.sync({ force: eraseDatabaseOnSync }).then(async () => {
   if (eraseDatabaseOnSync) {
-    createUsersWithMessages();
+    createUsersWithMessages(new Date());
   }
 
   server.applyMiddleware({ app, path: '/graphql' });
+  const httpServer = http.createServer(app);
+  server.installSubscriptionHandlers(httpServer);
 
-  app.listen({ port: 8000 }, () => {
-    console.log('Apollo Server on http://localhost:8000/graphql 😛 🚀 🚀🚀');
+  // ⚠️ Pay attention to the fact that we are calling `listen` on the http server variable, and not on `app`.
+  httpServer.listen({ port: 8000 }, () => {
+    console.log(`Apollo Server on http://localhost:8000/graphql 😛 🚀 🚀🚀
+😃 😈 Subscriptions ready at ws://localhost:${8000}${
+      server.subscriptionsPath
+    }`);
   });
 });

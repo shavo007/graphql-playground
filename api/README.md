@@ -31,6 +31,14 @@ https://www.pgadmin.org/download/
 
 ![](docs/pgAdmin4.png)
 
+## Authz
+
+Sample headers
+
+```bash
+{"Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NywiZW1haWwiOiJzbGVlMUBzZWVrLmNvbS5hdSIsInVzZXJuYW1lIjoic2hhbmUxIiwiaWF0IjoxNTQzODA5NjU2LCJleHAiOjE1NDM4MTE0NTZ9.hKV1vR6kV3hCCAMxBtGsuXeZ5MUq1TIwQSGcvk_gb_M"}
+```
+
 ## Error handling
 
 [Error handling](https://www.apollographql.com/docs/apollo-server/v2/features/errors.html)
@@ -45,3 +53,6 @@ To disable stacktraces for production, pass debug: false to the Apollo server co
 - [API validation/custom directives](https://blog.apollographql.com/graphql-validation-using-directives-4908fd5c1055) -- similar to jpa annotations!!
 - [Rest datasource](https://www.apollographql.com/docs/apollo-server/v2/features/data-sources.html)
 - [Github graphql API](https://developer.github.com/v4/)
+- [Best practices](https://graphql.github.io/learn/best-practices/)
+- [Sandbox](https://codesandbox.io/s/apollo-server)
+- [Subscriptions middleware](https://www.apollographql.com/docs/apollo-server/v2/features/subscriptions.html#middleware)
