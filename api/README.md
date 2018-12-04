@@ -47,6 +47,19 @@ Sample headers
 
 To disable stacktraces for production, pass debug: false to the Apollo server constructor or set the NODE_ENV environment variable to ‘production’ or ‘test’. Note that this will make the stacktrace unavailable to your application. If you want to log the stacktrace, but not send it in the response to the client, see Masking and logging errors below.
 
+## Docker
+
+```bash
+docker build   -t shanelee007/graphql:latest .
+docker run -p 8000:8000 --link some-postgres  shanelee007/graphql
+```
+
+## TODO
+
+- Look at alpine instructions https://github.com/kelektiv/node.bcrypt.js/wiki/Installation-Instructions#docker
+- skaffold for local testing
+-
+
 ## Resources
 
 - [GraphQL execution](https://graphql.github.io/learn/execution/)

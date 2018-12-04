@@ -62,4 +62,4 @@ typings/
 
 pacts
 report.json
-yarn.lock
+dist
