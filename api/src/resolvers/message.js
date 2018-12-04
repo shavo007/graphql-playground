@@ -4,6 +4,11 @@ import { combineResolvers } from 'graphql-resolvers';
 
 import { isAuthenticated, isMessageOwner } from './authorization';
 
+const toCursorHash = string => Buffer.from(string).toString('base64');
+
+const fromCursorHash = string =>
+  Buffer.from(string, 'base64').toString('ascii');
+
 export default {
   Query: {
     messages: async (parent, { cursor, limit = 100 }, { models }) => {
@@ -11,16 +16,28 @@ export default {
         ? {
             where: {
               createdAt: {
-                [Sequelize.Op.lt]: cursor
+                [Sequelize.Op.lt]: fromCursorHash(cursor)
               }
             }
           }
         : {};
-      return models.Message.findAll({
+      const messages = await models.Message.findAll({
         order: [['createdAt', 'DESC']],
-        limit,
+        limit: limit + 1,
         ...cursorOptions
       });
+      console.log(`messages length is ${messages.length}`);
+      const hasNextPage = messages.length > limit;
+      const edges = hasNextPage ? messages.slice(0, -1) : messages;
+      return {
+        edges,
+        pageInfo: {
+          endCursor: toCursorHash(
+            edges[edges.length - 1].createdAt.toISOString()
+          ),
+          hasNextPage
+        }
+      };
     },
     message: async (parent, { id }, { models }) => models.Message.findByPk(id)
   },
