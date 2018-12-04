@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken';
 import 'dotenv/config';
 import cors from 'cors';
 import { ApolloServer, AuthenticationError } from 'apollo-server-express';
+import http from 'http';
 import schema from './schema';
 import resolvers from './resolvers';
 // import models from './models';
@@ -91,22 +92,29 @@ const server = new ApolloServer({
   // context: ({ req }) => ({
   //    authScope: getScope(req.headers.authorization)
   //  })
-  context: async ({ req }) => {
-    const token = req.headers.authorization || '';
-    // try to retrieve a user with the token
-    //
-    // const user = getUser(token);
-    // optionally block the user
-    // we could also check user roles/permissions here
-    // if (!user) throw new AuthorizationError('you must be logged in');
-    return {
-      me: await getMe(token),
-      // me: await models.User.findByLogin('rwieruch'),
-      // me: models.users[1],
-      // user,
-      models,
-      secret: process.env.SECRET
-    };
+  context: async ({ req, connection }) => {
+    if (connection) {
+      return {
+        models
+      };
+    }
+    if (req) {
+      const token = req.headers.authorization || '';
+      // try to retrieve a user with the token
+      //
+      // const user = getUser(token);
+      // optionally block the user
+      // we could also check user roles/permissions here
+      // if (!user) throw new AuthorizationError('you must be logged in');
+      return {
+        me: await getMe(token),
+        // me: await models.User.findByLogin('rwieruch'),
+        // me: models.users[1],
+        // user,
+        models,
+        secret: process.env.SECRET
+      };
+    }
   }
 });
 
@@ -118,8 +126,10 @@ sequelize.sync({ force: eraseDatabaseOnSync }).then(async () => {
   }
 
   server.applyMiddleware({ app, path: '/graphql' });
+  const httpServer = http.createServer(app);
+  server.installSubscriptionHandlers(httpServer);
 
-  app.listen({ port: 8000 }, () => {
+  httpServer.listen({ port: 8000 }, () => {
     console.log('Apollo Server on http://localhost:8000/graphql 😛 🚀 🚀🚀');
   });
 });
