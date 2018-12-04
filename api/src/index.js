@@ -89,6 +89,19 @@ const server = new ApolloServer({
       message
     };
   },
+  subscriptions: {
+    onConnect: (connectionParams, webSocket, context) => {
+      // TODO auth over websocket https://www.apollographql.com/docs/apollo-server/v2/features/subscriptions.html#Authentication-Over-WebSocket
+      console.log(`onConnect: `);
+    },
+    onDisconnect: (webSocket, context) => {
+      // ...
+    }
+  },
+  tracing: true,
+  cacheControl: true,
+  introspection: process.env.NODE_ENV !== 'production',
+  playground: process.env.NODE_ENV !== 'production',
   // context: ({ req }) => ({
   //    authScope: getScope(req.headers.authorization)
   //  })
@@ -129,7 +142,11 @@ sequelize.sync({ force: eraseDatabaseOnSync }).then(async () => {
   const httpServer = http.createServer(app);
   server.installSubscriptionHandlers(httpServer);
 
+  // ⚠️ Pay attention to the fact that we are calling `listen` on the http server variable, and not on `app`.
   httpServer.listen({ port: 8000 }, () => {
-    console.log('Apollo Server on http://localhost:8000/graphql 😛 🚀 🚀🚀');
+    console.log(`Apollo Server on http://localhost:8000/graphql 😛 🚀 🚀🚀
+😃 😈 Subscriptions ready at ws://localhost:${8000}${
+      server.subscriptionsPath
+    }`);
   });
 });

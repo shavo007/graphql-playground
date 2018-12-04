@@ -1,6 +1,7 @@
 // import uuidv4 from 'uuid/v4';
 import Sequelize from 'sequelize';
 import { combineResolvers } from 'graphql-resolvers';
+import pubsub, { EVENTS } from '../subscription';
 
 import { isAuthenticated, isMessageOwner } from './authorization';
 
@@ -47,10 +48,14 @@ export default {
       isAuthenticated,
       async (parent, { text }, { me, models }) => {
         try {
-          return await models.Message.create({
+          const message = await models.Message.create({
             text,
             userId: me.id
           });
+          pubsub.publish(EVENTS.MESSAGE.CREATED, {
+            messageCreated: { message }
+          });
+          return message;
         } catch (error) {
           console.log(`error is ${error}`);
           throw new Error(error);
@@ -79,5 +84,10 @@ export default {
   Message: {
     user: async (parent, args, { models }) =>
       models.User.findByPk(parent.userId)
+  },
+  Subscription: {
+    messageCreated: {
+      subscribe: () => pubsub.asyncIterator(EVENTS.MESSAGE.CREATED)
+    }
   }
 };
