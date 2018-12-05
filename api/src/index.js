@@ -6,8 +6,8 @@ import { ApolloServer, AuthenticationError } from 'apollo-server-express';
 import http from 'http';
 import schema from './schema';
 import resolvers from './resolvers';
-// import models from './models';
 import models, { sequelize } from './models';
+import seedData from './models/seed';
 
 const app = express();
 app.use(cors());
@@ -28,47 +28,6 @@ const getMe = async token => {
     }
   }
   return undefined;
-};
-
-const createUsersWithMessages = async date => {
-  await models.User.create(
-    {
-      username: 'rwieruch',
-      email: 'hello@robin.com',
-      password: 'rwieruch',
-      role: 'ADMIN',
-      messages: [
-        {
-          text: 'Published the Road to learn React',
-          createdAt: date.setSeconds(date.getSeconds(+1))
-        }
-      ]
-    },
-    {
-      include: [models.Message]
-    }
-  );
-
-  await models.User.create(
-    {
-      username: 'ddavids',
-      email: 'hello@david.com',
-      password: 'ddavids',
-      messages: [
-        {
-          text: 'Happy to release ...',
-          createdAt: date.setSeconds(date.getSeconds(+1))
-        },
-        {
-          text: 'Published a complete ...',
-          createdAt: date.setSeconds(date.getSeconds(+5))
-        }
-      ]
-    },
-    {
-      include: [models.Message]
-    }
-  );
 };
 
 // const me = users[1];
@@ -131,11 +90,12 @@ const server = new ApolloServer({
   }
 });
 
-const eraseDatabaseOnSync = true;
+const isTest = !!process.env.TEST_DATABASE;
+// const eraseDatabaseOnSync = true;
 
-sequelize.sync({ force: eraseDatabaseOnSync }).then(async () => {
-  if (eraseDatabaseOnSync) {
-    createUsersWithMessages(new Date());
+sequelize.sync({ force: isTest }).then(async () => {
+  if (isTest) {
+    seedData(new Date());
   }
 
   server.applyMiddleware({ app, path: '/graphql' });

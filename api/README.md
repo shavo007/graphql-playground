@@ -58,7 +58,7 @@ docker run -p 8000:8000 --link some-postgres  shanelee007/graphql
 
 - Look at alpine instructions https://github.com/kelektiv/node.bcrypt.js/wiki/Installation-Instructions#docker
 - skaffold for local testing
--
+- kubernetes manifests
 
 ## Resources
 
