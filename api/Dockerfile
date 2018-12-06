@@ -1,5 +1,3 @@
-
-#
 # ---- Base Node ----
 FROM node:10 AS base
 LABEL maintainer="shane lee"
@@ -29,8 +27,6 @@ FROM base AS release
 # copy production node_modules
 COPY --from=dependencies /usr/src/app/prod_node_modules ./node_modules
 COPY --from=dependencies /usr/src/app/dist ./dist
-# copy app sources
-#COPY . .
 # expose port and define CMD
 ENV DATABASE=postgres
 ENV DATABASE_USER=postgres

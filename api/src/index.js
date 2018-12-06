@@ -4,6 +4,7 @@ import 'dotenv/config';
 import cors from 'cors';
 import { ApolloServer, AuthenticationError } from 'apollo-server-express';
 import http from 'http';
+import DataLoader from 'dataloader';
 import schema from './schema';
 import resolvers from './resolvers';
 import models, { sequelize } from './models';
@@ -15,6 +16,17 @@ app.use(cors());
 const getUser = token => {
   const user = models.users[1];
   return user;
+};
+const batchUsers = async (keys, models) => {
+  const users = await models.User.findAll({
+    where: {
+      id: {
+        $in: keys
+      }
+    }
+  });
+
+  return keys.map(key => users.find(user => user.id === key));
 };
 
 const getMe = async token => {
@@ -63,6 +75,8 @@ const server = new ApolloServer({
   cacheControl: true,
   introspection: process.env.NODE_ENV !== 'production',
   playground: process.env.NODE_ENV !== 'production',
+  // ⚠️ Useful for graphql first approach 👇🏻
+  // mocks: true,
   // context: ({ req }) => ({
   //    authScope: getScope(req.headers.authorization)
   //  })
@@ -80,13 +94,17 @@ const server = new ApolloServer({
       // optionally block the user
       // we could also check user roles/permissions here
       // if (!user) throw new AuthorizationError('you must be logged in');
+
       return {
         me: await getMe(token),
         // me: await models.User.findByLogin('rwieruch'),
         // me: models.users[1],
         // user,
         models,
-        secret: process.env.SECRET
+        secret: process.env.SECRET,
+        loaders: {
+          user: new DataLoader(keys => batchUsers(keys, models))
+        }
       };
     }
   }

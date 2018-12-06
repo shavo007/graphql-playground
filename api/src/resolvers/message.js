@@ -82,8 +82,11 @@ export default {
   //  flexibility to add your own data mapping
 
   Message: {
-    user: async (parent, args, { models }) =>
-      models.User.findByPk(parent.userId)
+    // ❓ before you use batching/caching
+    // user: async (parent, args, { models }) =>
+    //   models.User.findByPk(parent.userId)
+    //   ⚠️ after using batching and caching with dataloader
+    user: async (parent, args, { loaders }) => loaders.user.load(parent.userId)
   },
   Subscription: {
     messageCreated: {
