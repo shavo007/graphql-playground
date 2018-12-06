@@ -21,10 +21,12 @@ const getMe = async token => {
   if (token) {
     const bearerToken = token.split(' ')[1];
     console.log(`bearerToken is ${bearerToken}`);
-    try {
-      return await jwt.verify(bearerToken, process.env.SECRET);
-    } catch (e) {
-      throw new AuthenticationError('Your session expired. Sign in again.');
+    if (bearerToken) {
+      try {
+        return await jwt.verify(bearerToken, process.env.SECRET);
+      } catch (e) {
+        throw new AuthenticationError('Your session expired. Sign in again.');
+      }
     }
   }
   return undefined;
@@ -105,8 +107,6 @@ sequelize.sync({ force: isTest }).then(async () => {
   // ⚠️ Pay attention to the fact that we are calling `listen` on the http server variable, and not on `app`.
   httpServer.listen({ port: 8000 }, () => {
     console.log(`Apollo Server on http://localhost:8000/graphql 😛 🚀 🚀🚀
-😃 😈 Subscriptions ready at ws://localhost:${8000}${
-      server.subscriptionsPath
-    }`);
+Subscriptions ready at ws://localhost:${8000}${server.subscriptionsPath} 😃😈`);
   });
 });
