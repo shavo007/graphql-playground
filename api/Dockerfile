@@ -1,7 +1,9 @@
 # ---- Base Node ----
-FROM node:10 AS base
+FROM node:11-alpine AS base
 LABEL maintainer="shane lee"
-RUN mkdir -p /usr/src/app
+RUN apk --no-cache update \
+&& apk --no-cache  add --virtual builds-deps build-base python \
+&& mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
 # copy project file

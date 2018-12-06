@@ -1,12 +1,3 @@
-## Setup
-
-```bash
-nvm use
-yarn
-cp .env.example .env
-yarn start
-```
-
 ## Postgres setup
 
 `docker run --name some-postgres -e POSTGRES_PASSWORD=mysecretpassword -p 5432:5432 -d postgres`
@@ -31,6 +22,15 @@ https://www.pgadmin.org/download/
 
 ![](docs/pgAdmin4.png)
 
+## Setup
+
+```bash
+nvm use
+yarn
+cp .env.example .env
+yarn start
+```
+
 ## Authz
 
 Sample headers
@@ -50,16 +50,16 @@ To disable stacktraces for production, pass debug: false to the Apollo server co
 ## Docker
 
 ```bash
-docker build   -t shanelee007/graphql:latest .
-docker run -p 8000:8000 --link some-postgres  shanelee007/graphql
+docker build   -t shanelee007/graphql:1.0.0 -t  shanelee007/graphql:latest .
+docker run -d -p 8000:8000 --link some-postgres  shanelee007/graphql:1.0.0
 ```
 
 ## TODO
 
-- Look at alpine instructions https://github.com/kelektiv/node.bcrypt.js/wiki/Installation-Instructions#docker
 - skaffold for local testing
 - kubernetes manifests
 - add in renovate and circleci
+- add in rest datasource example
 
 ## Resources
 

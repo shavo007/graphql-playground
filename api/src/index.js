@@ -66,7 +66,7 @@ const server = new ApolloServer({
     }
   },
   tracing: true,
-  cacheControl: true,
+  cacheControl: process.env.NODE_ENV !== 'production',
   introspection: process.env.NODE_ENV !== 'production',
   playground: process.env.NODE_ENV !== 'production',
   // ⚠️ Useful for graphql first approach 👇🏻
