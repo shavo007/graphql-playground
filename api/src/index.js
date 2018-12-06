@@ -5,6 +5,7 @@ import cors from 'cors';
 import { ApolloServer, AuthenticationError } from 'apollo-server-express';
 import http from 'http';
 import DataLoader from 'dataloader';
+import compression from 'compression';
 import schema from './schema';
 import resolvers from './resolvers';
 import models, { sequelize } from './models';
@@ -13,6 +14,8 @@ import loaders from './loaders';
 
 const app = express();
 app.use(cors());
+// ⛏ gzip compression https://graphql.github.io/learn/best-practices/#json-with-gzip
+app.use(compression());
 
 const getUser = token => {
   const user = models.users[1];
