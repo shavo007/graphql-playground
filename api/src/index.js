@@ -9,6 +9,7 @@ import schema from './schema';
 import resolvers from './resolvers';
 import models, { sequelize } from './models';
 import seedData from './models/seed';
+import loaders from './loaders';
 
 const app = express();
 app.use(cors());
@@ -16,17 +17,6 @@ app.use(cors());
 const getUser = token => {
   const user = models.users[1];
   return user;
-};
-const batchUsers = async (keys, models) => {
-  const users = await models.User.findAll({
-    where: {
-      id: {
-        $in: keys
-      }
-    }
-  });
-
-  return keys.map(key => users.find(user => user.id === key));
 };
 
 const getMe = async token => {
@@ -45,6 +35,7 @@ const getMe = async token => {
 };
 
 // const me = users[1];
+//
 
 const server = new ApolloServer({
   typeDefs: schema,
@@ -83,7 +74,10 @@ const server = new ApolloServer({
   context: async ({ req, connection }) => {
     if (connection) {
       return {
-        models
+        models,
+        loaders: {
+          user: new DataLoader(keys => loaders.user.batchUsers(keys, models))
+        }
       };
     }
     if (req) {
@@ -103,7 +97,7 @@ const server = new ApolloServer({
         models,
         secret: process.env.SECRET,
         loaders: {
-          user: new DataLoader(keys => batchUsers(keys, models))
+          user: new DataLoader(keys => loaders.user.batchUsers(keys, models))
         }
       };
     }
