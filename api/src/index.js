@@ -26,7 +26,7 @@ const getUser = token => {
 const getMe = async token => {
   if (token) {
     const bearerToken = token.split(' ')[1];
-    console.log(`bearerToken is ${bearerToken}`);
+    // console.log(`bearerToken is ${bearerToken}`);
     if (bearerToken) {
       try {
         return await jwt.verify(bearerToken, process.env.SECRET);

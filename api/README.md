@@ -1,6 +1,6 @@
 # Apollo server playground
 
-> A full-fledged Apollo Server 2 with Apollo Client 2 starter project with React, Express and PostgreSQL.
+> A full-fledged Apollo Server 2 with Apollo Client 2 starter project with Express and PostgreSQL.
 
 ## Features
 
@@ -80,7 +80,7 @@ To disable stacktraces for production, pass debug: false to the Apollo server co
 
 ```bash
 docker build   -t shanelee007/graphql:1.0.0 -t  shanelee007/graphql:latest .
-docker run -d -p 8000:8000 --link some-postgres  shanelee007/graphql:1.0.0
+docker run -d -e TM_API_KEY=REDACTED -p 8000:8000 --link some-postgres  shanelee007/graphql:1.1.0
 ```
 
 ## TODO
