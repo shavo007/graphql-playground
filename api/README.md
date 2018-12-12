@@ -78,6 +78,8 @@ To disable stacktraces for production, pass debug: false to the Apollo server co
 
 ## Docker
 
+replace value below for TM_API_KEY
+
 ```bash
 docker build   -t shanelee007/graphql:1.0.0 -t  shanelee007/graphql:latest .
 docker run -d -e TM_API_KEY=REDACTED -p 8000:8000 --link some-postgres  shanelee007/graphql:1.1.0
@@ -92,23 +94,25 @@ replace secret for TM_API_KEY
 replace value for key `TM_API_KEY` inside kubernetes/secret.yaml
 
 ```bash
-kubectl apply -f kubernetes/ --record
+kubectl apply -f kubernetes/ --record #this will create the deployment, service and the config on the cluster
 
-kubectl exec -it <pod_name> -c graphql-api  sh
-kubectl logs -f <pod_name> -c graphql-api
+kubectl exec -it <pod_name> -c graphql-api  sh #inspect the container
+kubectl logs -f <pod_name> -c graphql-api #inspect the logs
 
-kubectl exec -it <pod_name> -c postgres bash
+kubectl exec -it <pod_name> -c postgres bash #inspect the database
 psql -d postgres -U postgres
-\l
+\l #list databases
 ```
 
-get the service port
+get the service to discover the public port exposed to access the api
 
 ```bash
 $ kgsvcowide
 NAME                                        TYPE           CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE       SELECTOR
 graphql-api                                 NodePort       10.98.127.193    <none>        8000:30537/TCP   40m       app=graphql
 ```
+
+Now using playground, you can for example access the endpoint over `http://localhost:30537/graphql`
 
 ## TODO
 
