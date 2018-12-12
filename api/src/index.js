@@ -11,6 +11,7 @@ import resolvers from './resolvers';
 import models, { sequelize } from './models';
 import seedData from './models/seed';
 import loaders from './loaders';
+import ArtistsAPI from './datasource/artists';
 
 const app = express();
 app.use(cors());
@@ -37,12 +38,12 @@ const getMe = async token => {
   return undefined;
 };
 
-// const me = users[1];
-//
-
 const server = new ApolloServer({
   typeDefs: schema,
   resolvers,
+  dataSources: () => ({
+    artistsAPI: new ArtistsAPI()
+  }),
   // global error handling
   formatError: error => {
     // remove the internal sequelize error message
@@ -56,24 +57,21 @@ const server = new ApolloServer({
       message
     };
   },
-  subscriptions: {
-    onConnect: (connectionParams, webSocket, context) => {
-      // TODO auth over websocket https://www.apollographql.com/docs/apollo-server/v2/features/subscriptions.html#Authentication-Over-WebSocket
-      console.log(`onConnect: `);
-    },
-    onDisconnect: (webSocket, context) => {
-      // ...
-    }
-  },
+  // subscriptions: {
+  //   onConnect: (connectionParams, webSocket, context) => {
+  //     // TODO auth over websocket https://www.apollographql.com/docs/apollo-server/v2/features/subscriptions.html#Authentication-Over-WebSocket
+  //     console.log(`onConnect: `);
+  //   },
+  //   onDisconnect: (webSocket, context) => {
+  //     // ...
+  //   }
+  // },
   tracing: true,
   cacheControl: process.env.NODE_ENV !== 'production',
   introspection: process.env.NODE_ENV !== 'production',
   playground: process.env.NODE_ENV !== 'production',
   // ⚠️ Useful for graphql first approach 👇🏻
   // mocks: true,
-  // context: ({ req }) => ({
-  //    authScope: getScope(req.headers.authorization)
-  //  })
   context: async ({ req, connection }) => {
     if (connection) {
       return {
@@ -94,11 +92,9 @@ const server = new ApolloServer({
 
       return {
         me: await getMe(token),
-        // me: await models.User.findByLogin('rwieruch'),
-        // me: models.users[1],
-        // user,
         models,
         secret: process.env.SECRET,
+        tmApiKey: process.env.TM_API_KEY,
         loaders: {
           user: new DataLoader(keys => loaders.user.batchUsers(keys, models))
         }
@@ -109,7 +105,6 @@ const server = new ApolloServer({
 
 const isTest = !!process.env.TEST_DATABASE;
 // const eraseDatabaseOnSync = true;
-
 sequelize.sync({ force: isTest }).then(async () => {
   if (isTest) {
     seedData(new Date());
@@ -122,6 +117,8 @@ sequelize.sync({ force: isTest }).then(async () => {
   // ⚠️ Pay attention to the fact that we are calling `listen` on the http server variable, and not on `app`.
   httpServer.listen({ port: 8000 }, () => {
     console.log(`Apollo Server on http://localhost:8000/graphql 😛 🚀 🚀🚀
-Subscriptions ready at ws://localhost:${8000}${server.subscriptionsPath} 😃😈`);
+                  Subscriptions ready at ws://localhost:${8000}${
+      server.subscriptionsPath
+    } 😃😈`);
   });
 });

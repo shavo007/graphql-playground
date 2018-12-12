@@ -1,4 +1,26 @@
-## Postgres setup
+# Apollo server playground
+
+> A full-fledged Apollo Server 2 with Apollo Client 2 starter project with React, Express and PostgreSQL.
+
+## Features
+
+- Node.js with Express and Apollo Server 2
+  - cursor-based Pagination
+- PostgreSQL Database with Sequelize
+  - entities: users, messages
+- Rest api resolver for Ticketmaster using new datasource API
+- Authentication
+  - powered by JWT and local storage
+  - Sign Up, Sign In, Sign Out
+- Authorization
+  - protected endpoint (e.g. verify valid session)
+  - protected resolvers (e.g. e.g. session-based, role-based)
+  - protected routes (e.g. session-based, role-based)
+- performance optimizations
+  - example of using Facebook's dataloader
+- E2E testing
+
+### Postgres setup
 
 `docker run --name some-postgres -e POSTGRES_PASSWORD=mysecretpassword -p 5432:5432 -d postgres`
 
@@ -22,7 +44,7 @@ https://www.pgadmin.org/download/
 
 ![](docs/pgAdmin4.png)
 
-## Setup
+### Setup
 
 ```bash
 nvm use
@@ -30,6 +52,13 @@ yarn
 cp .env.example .env
 yarn start
 ```
+
+### Running queries locally
+
+You’ll need to get one API key:
+
+- [Ticketmaster API key](https://developer.ticketmaster.com/products-and-docs/apis/getting-started/)
+- copy api key to .env file
 
 ## Authz
 
@@ -59,7 +88,6 @@ docker run -d -p 8000:8000 --link some-postgres  shanelee007/graphql:1.0.0
 - skaffold for local testing
 - kubernetes manifests
 - add in renovate and circleci
-- add in rest datasource example
 
 ## Resources
 

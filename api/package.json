@@ -6,7 +6,7 @@
   "scripts": {
     "build": "rimraf dist && babel src -d dist",
     "serve": "node dist/index.js",
-    "start": "nodemon --exec babel-node src/index.js",
+    "start": "NODE_ENV=development nodemon --exec babel-node src/index.js",
     "start:prod": "NODE_ENV=production nodemon --exec babel-node src/index.js",
     "test-server": "TEST_DATABASE=mytestdatabase yarn start",
     "test": "mocha --require @babel/register 'src/**/*.spec.js'",
@@ -16,6 +16,7 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
+    "apollo-datasource-rest": "^0.2.1",
     "apollo-server": "^2.1.0",
     "apollo-server-express": "^2.1.0",
     "bcrypt": "^3.0.2",
