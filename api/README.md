@@ -83,10 +83,36 @@ docker build   -t shanelee007/graphql:1.0.0 -t  shanelee007/graphql:latest .
 docker run -d -e TM_API_KEY=REDACTED -p 8000:8000 --link some-postgres  shanelee007/graphql:1.1.0
 ```
 
+## Kubernetes
+
+replace secret for TM_API_KEY
+
+`echo -n 'XXX' | base64`
+
+replace value for key `TM_API_KEY` inside kubernetes/secret.yaml
+
+```bash
+kubectl apply -f kubernetes/ --record
+
+kubectl exec -it <pod_name> -c graphql-api  sh
+kubectl logs -f <pod_name> -c graphql-api
+
+kubectl exec -it <pod_name> -c postgres bash
+psql -d postgres -U postgres
+\l
+```
+
+get the service port
+
+```bash
+$ kgsvcowide
+NAME                                        TYPE           CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE       SELECTOR
+graphql-api                                 NodePort       10.98.127.193    <none>        8000:30537/TCP   40m       app=graphql
+```
+
 ## TODO
 
 - skaffold for local testing
-- kubernetes manifests
 - add in renovate and circleci
 
 ## Resources

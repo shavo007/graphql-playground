@@ -1,0 +1,78 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: graphql-api
+  labels:
+    app: graphql-api
+spec:
+  ports:
+    - port: 8000
+  selector:
+    app: graphql-api
+  type: NodePort
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: graphql-api
+  name: graphql-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: graphql-api
+  revisionHistoryLimit: 2
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: graphql-api
+    spec:
+      containers:
+        - image: shanelee007/graphql:latest
+          name: graphql-api
+          resources:
+            requests:
+              memory: '100Mi'
+              cpu: '20m'
+            limits:
+              memory: '400Mi'
+              cpu: '200m'
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8000
+          envFrom:
+            - configMapRef:
+                name: graphql-api-configuration
+          env:
+            - name: SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: graphql-api-secret
+                  key: SECRET
+            - name: TM_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: graphql-api-secret
+                  key: TM_API_KEY
+            - name: DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: graphql-api-secret
+                  key: DATABASE_PASSWORD
+        - image: postgres:latest
+          name: postgres
+          # resources:
+          # requests:
+          #   memory: '100Mi'
+          #   cpu: '20m'
+          # limits:
+          #   memory: '400Mi'
+          #   cpu: '200m'
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 5432
