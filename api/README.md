@@ -85,6 +85,16 @@ docker build   -t shanelee007/graphql:1.0.0 -t  shanelee007/graphql:latest .
 docker run -d -e TM_API_KEY=REDACTED -p 8000:8000 --link some-postgres  shanelee007/graphql:1.1.0
 ```
 
+## Skaffold
+
+> Easy and Repeatable Kubernetes Development
+
+```bash
+brew install skaffold
+skaffold init #initialise the project with yaml config
+skaffold dev -v=debug #run locally/watching changes
+```
+
 ## Kubernetes
 
 replace secret for TM_API_KEY
@@ -129,3 +139,4 @@ Now using playground, you can for example access the endpoint over `http://local
 - [Sandbox](https://codesandbox.io/s/apollo-server)
 - [Subscriptions middleware](https://www.apollographql.com/docs/apollo-server/v2/features/subscriptions.html#middleware)
 - [Mocking](https://www.apollographql.com/docs/apollo-server/v2/features/mocking.html)
+- [Skaffold](https://ahmet.im/blog/skaffold/)

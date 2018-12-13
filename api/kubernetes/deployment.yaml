@@ -33,7 +33,7 @@ spec:
         app: graphql-api
     spec:
       containers:
-        - image: shanelee007/graphql:latest
+        - image: shanelee007/graphql
           name: graphql-api
           resources:
             requests:
