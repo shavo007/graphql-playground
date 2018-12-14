@@ -1,6 +1,12 @@
 # Apollo server playground
 
+![](https://graphql.org/img/og_image.png)
+
 > A full-fledged Apollo Server 2 with Apollo Client 2 starter project with Express and PostgreSQL.
+
+## Graphql you say..
+
+> Fetch all data in a single roundtrip, and provide structured documentation for our APIs
 
 ## Features
 
@@ -76,7 +82,9 @@ Sample headers
 
 To disable stacktraces for production, pass debug: false to the Apollo server constructor or set the NODE_ENV environment variable to ‘production’ or ‘test’. Note that this will make the stacktrace unavailable to your application. If you want to log the stacktrace, but not send it in the response to the client, see Masking and logging errors below.
 
-## Docker
+## Deployment options
+
+### Docker
 
 replace value below for TM_API_KEY
 
@@ -85,7 +93,7 @@ docker build   -t shanelee007/graphql:1.0.0 -t  shanelee007/graphql:latest .
 docker run -d -e TM_API_KEY=REDACTED -p 8000:8000 --link some-postgres  shanelee007/graphql:1.1.0
 ```
 
-## Skaffold
+### Skaffold
 
 > Easy and Repeatable Kubernetes Development
 
@@ -95,13 +103,16 @@ skaffold init #initialise the project with yaml config
 skaffold dev -v=debug #run locally/watching changes
 ```
 
-## Kubernetes
+### Kubernetes
 
 replace secret for TM_API_KEY
 
 `echo -n 'XXX' | base64`
 
 replace value for key `TM_API_KEY` inside kubernetes/secret.yaml
+
+**NOTE** both containers (graphql-api and postgres) are running inside the same pod.
+To productionise you would extract out the database and run [AWS aurora](https://aws.amazon.com/rds/aurora/details/postgresql-details/) for example
 
 ```bash
 kubectl apply -f kubernetes/ --record #this will create the deployment, service and the config on the cluster
@@ -127,7 +138,14 @@ Now using playground, you can for example access the endpoint over `http://local
 ## TODO
 
 - skaffold for local testing
-- add in renovate and circleci
+- linkerd
+- add in circleci
+
+## Challenges
+
+- How to keep graphql schema in sync with the downstream resource APIs (If you have multiple sources of truth in a microservice architecture, it’s a matter of when, not if they’ll become out of sync.)
+- Timeout limit to handle extremely complex queries that could bog down their servers
+- Schema validation (https://blog.apollographql.com/schema-validation-with-apollo-engine-4032456425ba)
 
 ## Resources
 
@@ -140,3 +158,4 @@ Now using playground, you can for example access the endpoint over `http://local
 - [Subscriptions middleware](https://www.apollographql.com/docs/apollo-server/v2/features/subscriptions.html#middleware)
 - [Mocking](https://www.apollographql.com/docs/apollo-server/v2/features/mocking.html)
 - [Skaffold](https://ahmet.im/blog/skaffold/)
+- [Companies using graphql](https://stackshare.io/posts/companies-using-graphql-in-production-2018)
