@@ -97,6 +97,8 @@ docker run -d -e TM_API_KEY=REDACTED -p 8000:8000 --link some-postgres  shanelee
 
 > Easy and Repeatable Kubernetes Development
 
+Broken right now ! - https://github.com/GoogleContainerTools/skaffold/issues/1392
+
 ```bash
 brew install skaffold
 skaffold init #initialise the project with yaml config
@@ -115,7 +117,8 @@ replace value for key `TM_API_KEY` inside kubernetes/secret.yaml
 To productionise you would extract out the database and run [AWS aurora](https://aws.amazon.com/rds/aurora/details/postgresql-details/) for example
 
 ```bash
-kubectl apply -f kubernetes/ --record #this will create the deployment, service and the config on the cluster
+kubectl create ns graphql
+kubectl apply -f kubernetes/ -n graphql --record #this will create the deployment, service and the config on the cluster
 
 kubectl exec -it <pod_name> -c graphql-api  sh #inspect the container
 kubectl logs -f <pod_name> -c graphql-api #inspect the logs
@@ -135,11 +138,45 @@ graphql-api                                 NodePort       10.98.127.193    <non
 
 Now using playground, you can for example access the endpoint over `http://localhost:30537/graphql`
 
+#### Linkerd
+
+> Linkerd is a service mesh for Kubernetes and other frameworks. It makes running services easier and safer by giving you runtime debugging, observability, reliability, and security—all without requiring any changes to your code.
+
+##### Install
+
+```bash
+curl -sL https://run.linkerd.io/install | sh
+export PATH=$PATH:$HOME/.linkerd2/bin
+linkerd version
+linkerd install | kubectl apply -f - #install to cluster
+linkerd check #check its running
+linkerd dashboard #explore control plane
+```
+
+Inject side car container to graphql deployment
+
+```bash
+kubectl get -n graphql deploy -o yaml \
+ | linkerd inject - \
+ | kubectl apply -f -
+
+linkerd -n graphql check --proxy
+linkerd -n graphql stat deploy
+```
+
+`tap` shows the stream of requests across the deployment
+
+![](docs/Linkerdtap.png)
+
+Linkerd includes Grafana to visualize all the great metrics collected by Prometheus and ships with some extremely valuable dashboards.
+
+![](docs/GrafanaLinkerdDeployment.png)
+
 ## TODO
 
-- skaffold for local testing
 - linkerd
 - add in circleci
+- pact for graphql https://github.com/pact-foundation/pact-js/tree/feat/message-pact/examples/graphql
 
 ## Challenges
 
@@ -159,3 +196,4 @@ Now using playground, you can for example access the endpoint over `http://local
 - [Mocking](https://www.apollographql.com/docs/apollo-server/v2/features/mocking.html)
 - [Skaffold](https://ahmet.im/blog/skaffold/)
 - [Companies using graphql](https://stackshare.io/posts/companies-using-graphql-in-production-2018)
+- [Building evolvable schema](https://blog.apollographql.com/graphql-schema-design-building-evolvable-schemas-1501f3c59ed5)

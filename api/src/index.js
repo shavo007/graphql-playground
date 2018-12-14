@@ -13,6 +13,8 @@ import seedData from './models/seed';
 import loaders from './loaders';
 import ArtistsAPI from './datasource/artists';
 
+const port = process.env.PORT || 8000;
+
 const app = express();
 app.use(cors());
 // ⛏ gzip compression https://graphql.github.io/learn/best-practices/#json-with-gzip
@@ -115,9 +117,9 @@ sequelize.sync({ force: isTest }).then(async () => {
   server.installSubscriptionHandlers(httpServer);
 
   // ⚠️ Pay attention to the fact that we are calling `listen` on the http server variable, and not on `app`.
-  httpServer.listen({ port: 8000 }, () => {
-    console.log(`Apollo Server on http://localhost:8000/graphql 😛 🚀 🚀🚀
-                  Subscriptions ready at ws://localhost:${8000}${
+  httpServer.listen({ port }, () => {
+    console.log(`Apollo Server on http://localhost:${port}/graphql 😛 🚀 🚀🚀
+ Subscriptions ready at ws://localhost:${port}${
       server.subscriptionsPath
     } 😃😈`);
   });
