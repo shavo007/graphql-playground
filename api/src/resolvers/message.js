@@ -1,4 +1,3 @@
-// import uuidv4 from 'uuid/v4';
 import Sequelize from 'sequelize';
 import { combineResolvers } from 'graphql-resolvers';
 import pubsub, { EVENTS } from '../subscription';

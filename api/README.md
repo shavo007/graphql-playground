@@ -120,10 +120,10 @@ To productionise you would extract out the database and run [AWS aurora](https:/
 kubectl create ns graphql
 kubectl apply -f kubernetes/ -n graphql --record #this will create the deployment, service and the config on the cluster
 
-kubectl exec -it <pod_name> -c graphql-api  sh #inspect the container
-kubectl logs -f <pod_name> -c graphql-api #inspect the logs
+kubectl exec -it <pod_name> -c graphql-api -n graphql  sh #inspect the container
+kubectl logs -f <pod_name> -c graphql-api -n graphql #inspect the logs
 
-kubectl exec -it <pod_name> -c postgres bash #inspect the database
+kubectl exec -it <pod_name> -c postgres -n graphql bash #inspect the database
 psql -d postgres -U postgres
 \l #list databases
 ```
@@ -174,7 +174,6 @@ Linkerd includes Grafana to visualize all the great metrics collected by Prometh
 
 ## TODO
 
-- linkerd
 - add in circleci
 - pact for graphql https://github.com/pact-foundation/pact-js/tree/feat/message-pact/examples/graphql
 
