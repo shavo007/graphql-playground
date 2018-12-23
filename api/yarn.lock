@@ -2571,10 +2571,10 @@ graphql-iso-date@3.6.1:
   resolved "https://registry.yarnpkg.com/graphql-iso-date/-/graphql-iso-date-3.6.1.tgz#bd2d0dc886e0f954cbbbc496bbf1d480b57ffa96"
   integrity sha512-AwFGIuYMJQXOEAgRlJlFL4H1ncFM8n8XmoVDTNypNOZyQ8LFDG2ppMFlsS862BSTCDcSUfHp8PD3/uJhv7t59Q==
 
-graphql-resolvers@0.2.2:
-  version "0.2.2"
-  resolved "https://registry.yarnpkg.com/graphql-resolvers/-/graphql-resolvers-0.2.2.tgz#911310367cf16a70b97b73da9f19d9598137851f"
-  integrity sha512-J3+A0A1nk2ff5ChKZfMYNLYqaDtTTX4IiIKR3nsE7ilhff8cQxUJ+joMU9ZKPD4ADAS9cTmDAZ4Gn3KojbbIiA==
+graphql-resolvers@0.3.2:
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/graphql-resolvers/-/graphql-resolvers-0.3.2.tgz#63d29147054310551597c4d3d6c0dd25a4d12ef5"
+  integrity sha512-hmGqt6P2CzPCvfWZcPMuZjc2m/MwnR0sJLVJ+bVvohxFDwL08B70pvcIUIGMFroav1Z8STcmZxPBBU4YdhRv7A==
   dependencies:
     deep-equal "^1.0.1"
     object-path "^0.11.4"
