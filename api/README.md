@@ -97,12 +97,10 @@ docker run -d -e TM_API_KEY=REDACTED -p 8000:8000 --link some-postgres  shanelee
 
 > Easy and Repeatable Kubernetes Development
 
-Broken right now ! - https://github.com/GoogleContainerTools/skaffold/issues/1392
-
 ```bash
 brew install skaffold
 skaffold init #initialise the project with yaml config
-skaffold dev -v=debug #run locally/watching changes
+skaffold dev -v=info #run locally/watching changes
 ```
 
 ### Kubernetes
