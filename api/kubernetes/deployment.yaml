@@ -42,7 +42,7 @@ spec:
             limits:
               memory: '400Mi'
               cpu: '200m'
-          imagePullPolicy: Always
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8000
           envFrom:
