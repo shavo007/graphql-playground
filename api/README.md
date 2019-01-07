@@ -103,6 +103,8 @@ skaffold init #initialise the project with yaml config
 skaffold dev -v=info #run locally/watching changes
 ```
 
+[![asciicast](https://asciinema.org/a/220028.svg)](https://asciinema.org/a/220028)
+
 ### Kubernetes
 
 replace secret for TM_API_KEY
