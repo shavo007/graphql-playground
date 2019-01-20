@@ -53,10 +53,10 @@ https://www.pgadmin.org/download/
 ### Setup
 
 ```bash
-nvm use
-yarn
-cp .env.example .env
-yarn start
+nvm use \
+&& yarn \
+&& cp .env.example .env \
+&& yarn start
 ```
 
 ### Running queries locally
@@ -176,6 +176,8 @@ Linkerd includes Grafana to visualize all the great metrics collected by Prometh
 
 - add in circleci
 - pact for graphql https://github.com/pact-foundation/pact-js/tree/feat/message-pact/examples/graphql
+- skaffold sync feature -- need a new build and context if you want to run in dev mode compared to prod mode
+- https://skaffold.dev/docs/how-tos/profiles/ && https://github.com/GoogleContainerTools/skaffold/blob/master/examples/nodejs/skaffold.yaml
 
 ## Challenges
 

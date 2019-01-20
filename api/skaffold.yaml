@@ -2,10 +2,10 @@ apiVersion: skaffold/v1beta2
 kind: Config
 build:
   artifacts:
-  - image: shanelee007/graphql
+    - image: shanelee007/graphql
 deploy:
   kubectl:
     manifests:
-    - kubernetes/config.yaml
-    - kubernetes/deployment.yaml
-    - kubernetes/secret.yaml
+      - kubernetes/config.yaml
+      - kubernetes/deployment.yaml
+      - kubernetes/secret.yaml
