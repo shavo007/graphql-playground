@@ -100,8 +100,19 @@ docker run -d -e TM_API_KEY=REDACTED -p 8000:8000 --link some-postgres  shanelee
 ```bash
 brew install skaffold
 skaffold init #initialise the project with yaml config
-skaffold dev -v=info #run locally/watching changes
+skaffold dev -v=info #run locally/watching changes production mode
+
 ```
+
+#### Run locally
+
+There is a new feature for local dev to sync files, instead of rebuilding the whole artifact's image
+
+[profiles](https://skaffold.dev/docs/how-tos/profiles/) allows you to define build and deployment configurations for different contexts
+
+To run in dev mode with sync run the following profile
+
+`skaffold dev -p dev -v=info #run locally/watching changes dev mode`
 
 [![asciicast](https://asciinema.org/a/220028.svg)](https://asciinema.org/a/220028)
 
