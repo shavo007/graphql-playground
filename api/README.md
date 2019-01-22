@@ -127,8 +127,14 @@ replace value for key `TM_API_KEY` inside kubernetes/secret.yaml
 **NOTE** both containers (graphql-api and postgres) are running inside the same pod.
 To productionise you would extract out the database and run [AWS aurora](https://aws.amazon.com/rds/aurora/details/postgresql-details/) for example
 
+Kubernetes 1.13 now supports [server dry run](https://kubernetes.io/blog/2019/01/14/apiserver-dry-run-and-kubectl-diff/)
+
 ```bash
 kubectl create ns graphql
+
+#need to have kubectl 1.13 installed or higher
+kubectl apply -f kubernetes/ --server-dry-run
+
 kubectl apply -f kubernetes/ -n graphql --record #this will create the deployment, service and the config on the cluster
 
 kubectl exec -it <pod_name> -c graphql-api -n graphql  sh #inspect the container
