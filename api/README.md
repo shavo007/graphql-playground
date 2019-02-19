@@ -100,8 +100,16 @@ docker run -d -e TM_API_KEY=REDACTED -p 8000:8000 --link some-postgres  shanelee
 ```bash
 brew install skaffold
 skaffold init #initialise the project with yaml config
+skaffold config set --global local-cluster true #do not push images after building
 skaffold dev -v=info #run locally/watching changes production mode
 
+```
+
+#### Release upgrade
+
+```bash
+brew upgrade skaffold
+skaffold fix --overwrite
 ```
 
 #### Run locally
