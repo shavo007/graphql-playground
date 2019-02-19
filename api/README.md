@@ -122,6 +122,10 @@ To run in dev mode with sync run the following profile
 
 `skaffold dev -p dev -v=info #run locally/watching changes dev mode`
 
+If you like, you can try the experimental gui mode
+
+`skaffold dev -p dev -v=info --experimental-gui`
+
 [![asciicast](https://asciinema.org/a/220028.svg)](https://asciinema.org/a/220028)
 
 ### Kubernetes
