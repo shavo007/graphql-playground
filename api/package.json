@@ -29,7 +29,7 @@
     "graphql-iso-date": "3.6.1",
     "graphql-resolvers": "0.3.2",
     "jsonwebtoken": "8.4.0",
-    "pg": "7.8.0",
+    "pg": "7.8.2",
     "pg-hstore": "2.3.2",
     "sequelize": "4.42.0"
   },
