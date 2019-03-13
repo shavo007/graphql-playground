@@ -47,7 +47,7 @@
     "eslint-plugin-import": "2.14.0",
     "eslint-plugin-prettier": "2.7.0",
     "mocha": "5.2.0",
-    "nodemon": "1.18.9",
+    "nodemon": "1.18.10",
     "prettier": "1.16.4",
     "prettier-eslint": "8.8.2",
     "rimraf": "2.6.3"
