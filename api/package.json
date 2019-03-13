@@ -16,7 +16,7 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
-    "apollo-datasource-rest": "0.2.1",
+    "apollo-datasource-rest": "0.3.2",
     "apollo-server": "2.3.1",
     "apollo-server-express": "2.3.1",
     "bcrypt": "3.0.3",
