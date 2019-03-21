@@ -42,6 +42,7 @@ psql -d postgres -U postgres
 
 SELECT * from users;
 SELECT text from messages;
+CREATE DATABASE mytestdatabase; #create test database 
 ```
 
 Install PgAdmin
