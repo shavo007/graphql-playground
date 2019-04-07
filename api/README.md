@@ -90,7 +90,7 @@ To disable stacktraces for production, pass debug: false to the Apollo server co
 replace value below for TM_API_KEY
 
 ```bash
-docker build   -t shanelee007/graphql:1.0.0 -t  shanelee007/graphql:latest .
+DOCKER_BUILDKIT=1 docker build   -t shanelee007/graphql:1.0.0 -t  shanelee007/graphql:latest .
 docker run -d -e TM_API_KEY=REDACTED -p 8000:8000 --link some-postgres  shanelee007/graphql:1.1.0
 ```
 
