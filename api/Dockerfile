@@ -1,5 +1,5 @@
 # ---- Base Node ----
-FROM node:11-alpine AS base
+FROM node:12-alpine AS base
 LABEL maintainer="shane lee"
 RUN apk --no-cache update \
 && apk --no-cache  add --virtual builds-deps build-base python \
