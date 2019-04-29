@@ -1,6 +1,6 @@
 {
   "extends": [
-    "schedule:weekly",
+    "schedule:monthly",
     "group:linters",
     "group:jsUnitTest",
     "docker:enableMajor",
