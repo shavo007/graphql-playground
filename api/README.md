@@ -202,6 +202,31 @@ Linkerd includes Grafana to visualize all the great metrics collected by Prometh
 
 ![](docs/GrafanaLinkerdDeployment.png)
 
+### Google cloud run
+
+> Run stateless HTTP containers on a fully managed environment or in your own GKE cluster.
+
+We are going to test the new cloud run service by Google that allows you to easily deploy a container in the cloud and not concern yourself with capacity or provisioning --  **natively serverless**
+
+First on your google cloud account you need to enable billing and [cloud run API](http://console.cloud.google.com/apis/library/run.googleapis.com)
+
+```bash
+gcloud components install beta #install beta components
+gcloud components update #update components
+gcloud config set run/region us-central1 #set cloud run region
+gcloud services enable container.googleapis.com containerregistry.googleapis.com cloudbuild.googleapis.com
+gcloud config set project [PROJECT_ID] #set project id
+gcloud beta auth login
+gcloud builds submit --tag gcr.io/[PROJECT-ID]/graphql #build container image
+gcloud beta run deploy --image gcr.io/[PROJECT-ID]/graphql #respond y to allow unauthenticated invocations.
+```
+
+Check out [dev tips](https://cloud.google.com/run/docs/tips) for building your container images
+
+
+
+[Container contract](https://cloud.google.com/run/docs/reference/container-contract)
+
 ## TODO
 
 - add in circleci
