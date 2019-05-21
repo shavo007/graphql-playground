@@ -210,6 +210,8 @@ We are going to test the new cloud run service by Google that allows you to easi
 
 First on your google cloud account you need to enable billing and [cloud run API](http://console.cloud.google.com/apis/library/run.googleapis.com)
 
+Create your new google cloud project first and then run the following commands
+
 ```bash
 gcloud components install beta #install beta components
 gcloud components update #update components
@@ -218,14 +220,77 @@ gcloud services enable container.googleapis.com containerregistry.googleapis.com
 gcloud config set project [PROJECT_ID] #set project id
 gcloud beta auth login
 gcloud builds submit --tag gcr.io/[PROJECT-ID]/graphql #build container image
-gcloud beta run deploy --image gcr.io/[PROJECT-ID]/graphql #respond y to allow unauthenticated invocations.
 ```
 
-Check out [dev tips](https://cloud.google.com/run/docs/tips) for building your container images
+Graphql api talks to a postgres DB so we need to  configure your fully managed Cloud Run service to allow connections to a [Cloud SQL instance](https://cloud.google.com/run/docs/configuring/connect-cloudsql)
+
+- Enable the Cloud SQL Admin API for your project
+- Create a [postgres](https://cloud.google.com/sql/docs/postgres/create-instance) instance
+- [Connect](https://cloud.google.com/functions/docs/sql) to the instance programatically
+
+```bash
+gcloud sql instances create [INSTANCE_NAME]  --database-version=POSTGRES_9_6 \
+       --tier db-f1-micro --region us-central1 
+#save on costs by using a shared-core instance 
+gcloud sql users set-password postgres no-host --instance=[INSTANCE_NAME] \
+       --password=[PASSWORD]
+```
+
+Deploy the container using cloud run and overwrite env vars to connect to the DB
+
+```bash
+#overwrite the host to connect over a unix domain socket and db password
+gcloud beta run deploy --image gcr.io/[PROJECT-ID]/graphql --add-cloudsql-instances [INSTANCE-NAME] --update-env-vars DB_HOST=/cloudsql/[CONNECTION NAME],name=graphql,DATABASE_PASSWORD=[PASSWORD] #respond y to allow unauthenticated invocations.
+```
+![](docs/CloudRunServiceGraphql.png)
+
+#### Verify it works
+
+I use [Insomnia](https://insomnia.rest/) to test the endpoint
+
+
+![](docs/insomnia.png)
+
+Sample queries and mutations below
+
+1. Mutation first to create a user
+2. Query after to return user details
+
+```json
+
+//  {
+//   user(id: 1) {
+//     username
+//    }
+//  }
+
+ mutation
+ {
+   signUp(username: "shane", email: "slee@x.com",password: "xxx") {
+     token
+   }
+ }
+
+// query {
+//   users {
+//     username
+//     id
+//   }
+// }
+
+```
+#### Delete all resources
+
+Finally, delete all resources after
+
+Easiest way is to delete the test [project](https://console.cloud.google.com/iam-admin/projects)
+
+
+Check out [dev tips](https://cloud.google.com/run/docs/tips) for more details on building your container images
 
 
 
-[Container contract](https://cloud.google.com/run/docs/reference/container-contract)
+
 
 ## TODO
 
@@ -242,6 +307,7 @@ Check out [dev tips](https://cloud.google.com/run/docs/tips) for building your c
 
 ## Resources
 
+- [Container contract google cloud run](https://cloud.google.com/run/docs/reference/container-contract)
 - [GraphQL execution](https://graphql.github.io/learn/execution/)
 - [API validation/custom directives](https://blog.apollographql.com/graphql-validation-using-directives-4908fd5c1055) -- similar to jpa annotations!!
 - [Rest datasource](https://www.apollographql.com/docs/apollo-server/v2/features/data-sources.html)
