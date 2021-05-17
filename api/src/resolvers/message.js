@@ -4,9 +4,9 @@ import pubsub, { EVENTS } from '../subscription';
 
 import { isAuthenticated, isMessageOwner } from './authorization';
 
-const toCursorHash = string => Buffer.from(string).toString('base64');
+const toCursorHash = (string) => Buffer.from(string).toString('base64');
 
-const fromCursorHash = string =>
+const fromCursorHash = (string) =>
   Buffer.from(string, 'base64').toString('ascii');
 
 export default {
@@ -16,15 +16,15 @@ export default {
         ? {
             where: {
               createdAt: {
-                [Sequelize.Op.lt]: fromCursorHash(cursor)
-              }
-            }
+                [Sequelize.Op.lt]: fromCursorHash(cursor),
+              },
+            },
           }
         : {};
       const messages = await models.Message.findAll({
         order: [['createdAt', 'DESC']],
         limit: limit + 1,
-        ...cursorOptions
+        ...cursorOptions,
       });
       console.log(`messages length is ${messages.length}`);
       const hasNextPage = messages.length > limit;
@@ -35,11 +35,11 @@ export default {
           endCursor: toCursorHash(
             edges[edges.length - 1].createdAt.toISOString()
           ),
-          hasNextPage
-        }
+          hasNextPage,
+        },
       };
     },
-    message: async (parent, { id }, { models }) => models.Message.findByPk(id)
+    message: async (parent, { id }, { models }) => models.Message.findByPk(id),
   },
 
   Mutation: {
@@ -49,10 +49,10 @@ export default {
         try {
           const message = await models.Message.create({
             text,
-            userId: me.id
+            userId: me.id,
           });
           pubsub.publish(EVENTS.MESSAGE.CREATED, {
-            messageCreated: { message }
+            messageCreated: { message },
           });
           return message;
         } catch (error) {
@@ -74,7 +74,7 @@ export default {
         return true;
       }
       return false;
-    }
+    },
   },
 
   // resolve per field level
@@ -85,11 +85,11 @@ export default {
     // user: async (parent, args, { models }) =>
     //   models.User.findByPk(parent.userId)
     //   ⚠️ after using batching and caching with dataloader
-    user: async (parent, args, { loaders }) => loaders.user.load(parent.userId)
+    user: async (parent, args, { loaders }) => loaders.user.load(parent.userId),
   },
   Subscription: {
     messageCreated: {
-      subscribe: () => pubsub.asyncIterator(EVENTS.MESSAGE.CREATED)
-    }
-  }
+      subscribe: () => pubsub.asyncIterator(EVENTS.MESSAGE.CREATED),
+    },
+  },
 };

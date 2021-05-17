@@ -20,12 +20,12 @@ app.use(cors());
 // ⛏ gzip compression https://graphql.github.io/learn/best-practices/#json-with-gzip
 app.use(compression());
 
-const getUser = token => {
+const getUser = (token) => {
   const user = models.users[1];
   return user;
 };
 
-const getMe = async token => {
+const getMe = async (token) => {
   if (token) {
     const bearerToken = token.split(' ')[1];
     // console.log(`bearerToken is ${bearerToken}`);
@@ -44,10 +44,10 @@ const server = new ApolloServer({
   typeDefs: schema,
   resolvers,
   dataSources: () => ({
-    artistsAPI: new ArtistsAPI()
+    artistsAPI: new ArtistsAPI(),
   }),
   // global error handling
-  formatError: error => {
+  formatError: (error) => {
     // remove the internal sequelize error message
     // leave only the important validation error
     const message = error.message
@@ -56,7 +56,7 @@ const server = new ApolloServer({
 
     return {
       ...error,
-      message
+      message,
     };
   },
   // subscriptions: {
@@ -79,8 +79,8 @@ const server = new ApolloServer({
       return {
         models,
         loaders: {
-          user: new DataLoader(keys => loaders.user.batchUsers(keys, models))
-        }
+          user: new DataLoader((keys) => loaders.user.batchUsers(keys, models)),
+        },
       };
     }
     if (req) {
@@ -98,11 +98,11 @@ const server = new ApolloServer({
         secret: process.env.SECRET,
         tmApiKey: process.env.TM_API_KEY,
         loaders: {
-          user: new DataLoader(keys => loaders.user.batchUsers(keys, models))
-        }
+          user: new DataLoader((keys) => loaders.user.batchUsers(keys, models)),
+        },
       };
     }
-  }
+  },
 });
 
 const isTest = !!process.env.TEST_DATABASE;
@@ -119,8 +119,6 @@ sequelize.sync({ force: isTest }).then(async () => {
   // ⚠️ Pay attention to the fact that we are calling `listen` on the http server variable, and not on `app`.
   httpServer.listen({ port }, () => {
     console.log(`Apollo Server on http://localhost:${port}/graphql 😛 🚀 🚀🚀
- Subscriptions ready at ws://localhost:${port}${
-      server.subscriptionsPath
-    } 😃😈`);
+ Subscriptions ready at ws://localhost:${port}${server.subscriptionsPath} 😃😈`);
   });
 });

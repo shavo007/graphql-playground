@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const API_URL = 'http://localhost:8000/graphql';
 
-export const user = async variables =>
+export const user = async (variables) =>
   axios.post(API_URL, {
     query: `
       query ($id: ID!) {
@@ -14,10 +14,10 @@ export const user = async variables =>
         }
       }
     `,
-    variables
+    variables,
   });
 
-export const signIn = async variables =>
+export const signIn = async (variables) =>
   axios.post(API_URL, {
     query: `
       mutation ($login: String!, $password: String!) {
@@ -26,7 +26,7 @@ export const signIn = async variables =>
         }
       }
     `,
-    variables
+    variables,
   });
 
 export const deleteUser = async (variables, token) =>
@@ -38,11 +38,11 @@ export const deleteUser = async (variables, token) =>
           deleteUser(id: $id)
         }
       `,
-      variables
+      variables,
     },
     {
       headers: {
-        Authorization: `Bearer ${token}`
-      }
+        Authorization: `Bearer ${token}`,
+      },
     }
   );

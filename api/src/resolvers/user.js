@@ -16,7 +16,7 @@ export default {
         return null;
       }
       return models.User.findByPk(me.id);
-    }
+    },
   },
   Mutation: {
     signUp: async (
@@ -27,7 +27,7 @@ export default {
       const user = await models.User.create({
         username,
         email,
-        password
+        password,
       });
 
       return { token: createToken(user, secret, '30m') };
@@ -49,9 +49,9 @@ export default {
     },
     deleteUser: combineResolvers(isAdmin, async (parent, { id }, { models }) =>
       models.User.destroy({
-        where: { id }
+        where: { id },
       })
-    )
+    ),
   },
   // resolve per field level
   //  flexibility to add your own data mapping
@@ -61,8 +61,8 @@ export default {
     messages: async (parent, args, { models }) =>
       models.Message.findAll({
         where: {
-          userId: parent.id
-        }
-      })
-  }
+          userId: parent.id,
+        },
+      }),
+  },
 };

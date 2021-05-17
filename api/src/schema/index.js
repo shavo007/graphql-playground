@@ -25,5 +25,5 @@ export default [
   userSchema,
   messageSchema,
   bookSchema,
-  artistSchema
+  artistSchema,
 ];

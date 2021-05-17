@@ -10,12 +10,12 @@ import messageResolvers from './message';
 import artistResolvers from './artist';
 
 const customScalarResolver = {
-  Date: GraphQLDateTime
+  Date: GraphQLDateTime,
 };
 
 export default [
   customScalarResolver,
   userResolvers,
   messageResolvers,
-  artistResolvers
+  artistResolvers,
 ];

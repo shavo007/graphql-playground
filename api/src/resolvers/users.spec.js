@@ -9,8 +9,8 @@ describe('users', () => {
           id: '1',
           username: 'rwieruch',
           email: 'hello@robin.com',
-          role: 'ADMIN'
-        }
+          role: 'ADMIN',
+        },
       };
 
       const result = await userApi.user({ id: '1' });
@@ -19,7 +19,7 @@ describe('users', () => {
     });
     it('returns null when user cannot be found', async () => {
       const expectedResult = {
-        user: null
+        user: null,
       };
 
       const result = await userApi.user({ id: '42' });
@@ -32,16 +32,16 @@ describe('users', () => {
       const {
         data: {
           data: {
-            signIn: { token }
-          }
-        }
+            signIn: { token },
+          },
+        },
       } = await userApi.signIn({
         login: 'ddavids',
-        password: 'ddavids'
+        password: 'ddavids',
       });
 
       const {
-        data: { errors }
+        data: { errors },
       } = await userApi.deleteUser({ id: '1' }, token);
 
       expect(errors[0].message).to.eql('Not authorized as admin.');

@@ -1,6 +1,6 @@
 import models from './index';
 
-const createUsersWithMessages = async date => {
+const createUsersWithMessages = async (date) => {
   await models.User.create(
     {
       username: 'rwieruch',
@@ -10,12 +10,12 @@ const createUsersWithMessages = async date => {
       messages: [
         {
           text: 'Published the Road to learn React',
-          createdAt: date.setSeconds(date.getSeconds(+1))
-        }
-      ]
+          createdAt: date.setSeconds(date.getSeconds(+1)),
+        },
+      ],
     },
     {
-      include: [models.Message]
+      include: [models.Message],
     }
   );
 
@@ -27,16 +27,16 @@ const createUsersWithMessages = async date => {
       messages: [
         {
           text: 'Happy to release ...',
-          createdAt: date.setSeconds(date.getSeconds(+1))
+          createdAt: date.setSeconds(date.getSeconds(+1)),
         },
         {
           text: 'Published a complete ...',
-          createdAt: date.setSeconds(date.getSeconds(+5))
-        }
-      ]
+          createdAt: date.setSeconds(date.getSeconds(+5)),
+        },
+      ],
     },
     {
-      include: [models.Message]
+      include: [models.Message],
     }
   );
 };

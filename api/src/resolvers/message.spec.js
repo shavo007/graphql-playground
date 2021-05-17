@@ -9,9 +9,9 @@ describe('messages', () => {
           text: 'Published the Road to learn React',
           id: '1',
           user: {
-            username: 'rwieruch'
-          }
-        }
+            username: 'rwieruch',
+          },
+        },
       };
 
       const result = await messageApi.message({ id: 1 });
@@ -20,7 +20,7 @@ describe('messages', () => {
     });
     it('returns null when message cannot be found', async () => {
       const expectedResult = {
-        message: null
+        message: null,
       };
 
       const result = await messageApi.message({ id: 42 });
@@ -30,7 +30,7 @@ describe('messages', () => {
   describe('createMessage(text: String!): Message!', () => {
     it('returns an error because only logged in user can create a message', async () => {
       const {
-        data: { errors }
+        data: { errors },
       } = await messageApi.createMessage({ text: 'Shanes message' }, ' ');
 
       expect(errors[0].message).to.eql('Not authenticated as user.');
@@ -39,18 +39,18 @@ describe('messages', () => {
       const expectedResult = {
         createMessage: {
           id: '4',
-          text: 'Shanes message'
-        }
+          text: 'Shanes message',
+        },
       };
       const {
         data: {
           data: {
-            signIn: { token }
-          }
-        }
+            signIn: { token },
+          },
+        },
       } = await messageApi.signIn({
         login: 'ddavids',
-        password: 'ddavids'
+        password: 'ddavids',
       });
 
       const result = await messageApi.createMessage(

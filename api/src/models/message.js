@@ -4,15 +4,15 @@ const message = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       validate: {
         notEmpty: {
-          args: true
+          args: true,
           // override custom error message
           // msg: 'A message has to have a text.'
-        }
-      }
-    }
+        },
+      },
+    },
   });
 
-  Message.associate = models => {
+  Message.associate = (models) => {
     Message.belongsTo(models.User);
   };
 

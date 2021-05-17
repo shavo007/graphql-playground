@@ -6,16 +6,16 @@ const sequelize = new Sequelize(
   process.env.DATABASE_PASSWORD,
   {
     dialect: 'postgres',
-    host: process.env.DB_HOST
+    host: process.env.DB_HOST,
   }
 );
 
 const models = {
   User: sequelize.import('./user'),
-  Message: sequelize.import('./message')
+  Message: sequelize.import('./message'),
 };
 
-Object.keys(models).forEach(key => {
+Object.keys(models).forEach((key) => {
   if ('associate' in models[key]) {
     models[key].associate(models);
   }
