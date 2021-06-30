@@ -30,7 +30,7 @@
     "graphql-resolvers": "0.4.2",
     "jsonwebtoken": "8.5.1",
     "pg": "8.6.0",
-    "pg-hstore": "2.3.3",
+    "pg-hstore": "2.3.4",
     "sequelize": "5.22.4"
   },
   "devDependencies": {
