@@ -36,7 +36,7 @@
   "devDependencies": {
     "@babel/cli": "7.14.3",
     "@babel/core": "7.14.2",
-    "@babel/node": "7.14.2",
+    "@babel/node": "7.25.9",
     "@babel/preset-env": "7.14.2",
     "@babel/register": "7.13.16",
     "axios": "0.21.1",
